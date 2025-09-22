@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Desenvolvimento Web</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .section {
+            margin-bottom: 25px;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        h2 i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+        
+        ul {
+            list-style-type: none;
+        }
+        
+        li {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        li:hover {
+            background-color: #e8f4fc;
+            transform: translateX(5px);
+        }
+        
+        li .subitem {
+            margin-left: 25px;
+            background-color: #edf7fd;
+            border-left-color: #2980b9;
+        }
+        
+        .click-icon {
+            color: #3498db;
+            font-size: 0.9rem;
+        }
+        
+        .divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, #3498db, transparent);
+            margin: 30px 0;
+            grid-column: 1 / -1;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Desenvolvimento Web</h1>
+            <p class="subtitle">Guia completo de tópicos importantes</p>
+        </header>
+        
+        <div class="content">
+            <div class="left-column">
+                <div class="section">
+                    <h2><i class="fas fa-code"></i> Estrutura básica de uma página</h2>
+                    <ul>
+                        <li>Tabelas
+                            <ul>
+                                <a href="index4.html"><li class="subitem">Click<i class="fas fa-mouse-pointer click-icon"></i></li></a> 
+                            </ul>
+                        </li>
+                        <li>Botões
+                            <ul>
+                                <a href="index3.html"><li class="subitem">Click<i class="fas fa-mouse-pointer click-icon"></i></li></a> 
+                            </ul>
+                        </li>
+                        <li>Texto
+                            <ul>
+                                <a href="index7.html"><li class="subitem">Click<i class="fas fa-mouse-pointer click-icon"></i></li></a> 
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="section">
+                    <h2><i class="fas fa-paint-brush"></i> Estilização e Design</h2>
+                    <ul>
+                        <li>Cores
+                            <ul>
+                                <a href="index2.html"><li class="subitem">Click<i class="fas fa-mouse-pointer click-icon"></i></li></a> 
+                            </ul>
+                        </li>
+                        <li>Imagens com Efeitos
+                            <ul>
+                                <a href="index6.html"><li class="subitem">Click<i class="fas fa-mouse-pointer click-icon"></i></li></a> 
+                            </ul>
+                        </li>
+                        <li>Sombras e efeitos visuais
+                            <ul>
+                                <a href="index5.html"><li class="subitem">Click<i class="fas fa-mouse-pointer click-icon"></i></li></a> 
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="divider"></div>
+        </div>
+        
+        <footer>
+            <p>Guia de Desenvolvimento Web &copy; 2023 - Todos os tópicos essenciais para aprendizado</p>
+        </footer>
+    </div>
+
+    <script>
+        // Adicionando interatividade aos itens
+        document.querySelectorAll('li').forEach(item => {
+            item.addEventListener('click', function() {
+                this.style.backgroundColor = '#d1ecf1';
+                this.style.borderLeftColor = '#0c5460';
+                
+                // Retorna à cor original após 500ms
+                setTimeout(() => {
+                    this.style.backgroundColor = '';
+                    this.style.borderLeftColor = '';
+                }, 500);
+            });
+        });
+    </script>
+</body>
+</html>

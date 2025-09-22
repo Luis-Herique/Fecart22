@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalizador de Botões</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        header {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .panel {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        
+        h2 {
+            color: #3498db;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        input[type="text"],
+        input[type="color"],
+        input[type="range"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        input[type="range"] {
+            padding: 0;
+        }
+        
+        .preview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+        
+        #buttonPreview {
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .code-container {
+            position: relative;
+        }
+        
+        pre {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .copy-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Personalizador de Botões</h1>
+            <p>Personalize o botão abaixo e veja o código gerado em tempo real</p>
+        </header>
+        
+        <div class="panel">
+            <h2>Personalização</h2>
+            
+            <div class="control-group">
+                <label for="buttonText">Texto do Botão:</label>
+                <input type="text" id="buttonText" value="Clique Aqui">
+            </div>
+            
+            <div class="control-group">
+                <label for="textColor">Cor do Texto:</label>
+                <input type="color" id="textColor" value="#ffffff">
+            </div>
+            
+            <div class="control-group">
+                <label for="bgColor">Cor de Fundo:</label>
+                <input type="color" id="bgColor" value="#3498db">
+            </div>
+            
+            <div class="control-group">
+                <label for="fontSize">Tamanho da Fonte (px):</label>
+                <input type="range" id="fontSize" min="12" max="32" value="18">
+                <span id="fontSizeValue">18px</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="paddingX">Preenchimento Horizontal (px):</label>
+                <input type="range" id="paddingX" min="5" max="50" value="30">
+                <span id="paddingXValue">30px</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="paddingY">Preenchimento Vertical (px):</label>
+                <input type="range" id="paddingY" min="5" max="50" value="15">
+                <span id="paddingYValue">15px</span>
+            </div>
+            
+            <div class="control-group">
+                <label for="borderRadius">Arredondamento de Bordas (px):</label>
+                <input type="range" id="borderRadius" min="0" max="25" value="4">
+                <span id="borderRadiusValue">4px</span>
+            </div>
+        </div>
+        
+        <div class="panel preview">
+            <h2>Preview</h2>
+            <button id="buttonPreview">Clique Aqui</button>
+        </div>
+        
+        <div class="panel code-container">
+            <h2>Código Gerado</h2>
+            <button class="copy-btn" id="copyButton">Copiar</button>
+            <pre id="generatedCode"></pre>
+        </div>
+    </div>
+
+    <script>
+        // Elementos DOM
+        const buttonText = document.getElementById('buttonText');
+        const textColor = document.getElementById('textColor');
+        const bgColor = document.getElementById('bgColor');
+        const fontSize = document.getElementById('fontSize');
+        const fontSizeValue = document.getElementById('fontSizeValue');
+        const paddingX = document.getElementById('paddingX');
+        const paddingXValue = document.getElementById('paddingXValue');
+        const paddingY = document.getElementById('paddingY');
+        const paddingYValue = document.getElementById('paddingYValue');
+        const borderRadius = document.getElementById('borderRadius');
+        const borderRadiusValue = document.getElementById('borderRadiusValue');
+        const buttonPreview = document.getElementById('buttonPreview');
+        const generatedCode = document.getElementById('generatedCode');
+        const copyButton = document.getElementById('copyButton');
+        
+        // Atualizar os valores exibidos dos ranges
+        fontSizeValue.textContent = `${fontSize.value}px`;
+        paddingXValue.textContent = `${paddingX.value}px`;
+        paddingYValue.textContent = `${paddingY.value}px`;
+        borderRadiusValue.textContent = `${borderRadius.value}px`;
+        
+        // Função para atualizar o preview e o código
+        function updatePreview() {
+            // Atualizar o botão de preview
+            buttonPreview.textContent = buttonText.value;
+            buttonPreview.style.color = textColor.value;
+            buttonPreview.style.backgroundColor = bgColor.value;
+            buttonPreview.style.fontSize = `${fontSize.value}px`;
+            buttonPreview.style.padding = `${paddingY.value}px ${paddingX.value}px`;
+            buttonPreview.style.borderRadius = `${borderRadius.value}px`;
+            
+            // Gerar o código
+            generateCode();
+        }
+        
+        // Função para gerar o código HTML, CSS e JS
+        function generateCode() {
+            const code = `<!-- HTML -->
+<button class="custom-button">${buttonText.value}</button>
+
+<!-- CSS -->
+<style>
+.custom-button {
+    color: ${textColor.value};
+    background-color: ${bgColor.value};
+    font-size: ${fontSize.value}px;
+    padding: ${paddingY.value}px ${paddingX.value}px;
+    border-radius: ${borderRadius.value}px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.custom-button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+</style>
+
+<!-- JavaScript (opcional para interações) -->
+<script>
+document.querySelector('.custom-button').addEventListener('click', function() {
+    alert('Botão clicado!');
+});
+<\/script>`;
+            
+            generatedCode.textContent = code;
+        }
+        
+        // Event listeners para os controles
+        buttonText.addEventListener('input', updatePreview);
+        textColor.addEventListener('input', updatePreview);
+        bgColor.addEventListener('input', updatePreview);
+        fontSize.addEventListener('input', function() {
+            fontSizeValue.textContent = `${this.value}px`;
+            updatePreview();
+        });
+        paddingX.addEventListener('input', function() {
+            paddingXValue.textContent = `${this.value}px`;
+            updatePreview();
+        });
+        paddingY.addEventListener('input', function() {
+            paddingYValue.textContent = `${this.value}px`;
+            updatePreview();
+        });
+        borderRadius.addEventListener('input', function() {
+            borderRadiusValue.textContent = `${this.value}px`;
+            updatePreview();
+        });
+        
+        // Copiar código para a área de transferência
+        copyButton.addEventListener('click', function() {
+            const textArea = document.createElement('textarea');
+            textArea.value = generatedCode.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            // Feedback visual
+            const originalText = copyButton.textContent;
+            copyButton.textContent = 'Copiado!';
+            setTimeout(() => {
+                copyButton.textContent = originalText;
+            }, 2000);
+        });
+        
+        // Inicializar
+        updatePreview();
+    </script>
+</body>
+</html>

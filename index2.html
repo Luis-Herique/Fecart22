@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorador de Cores - Aprenda Web Design</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            padding: 20px;
+            transition: all 0.5s ease;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .dark-mode {
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
+            color: #f5f7fa;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            padding: 30px 0;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode header {
+            background: rgba(35, 35, 45, 0.9);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            background: linear-gradient(to right, #3498db, #2ecc71, #e74c3c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .dark-mode h1 {
+            color: #f5f7fa;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 25px;
+        }
+        
+        .dark-mode .subtitle {
+            color: #bdc3c7;
+        }
+        
+        .color-picker {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode .color-picker {
+            background: rgba(45, 45, 55, 0.8);
+        }
+        
+        .color-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .color-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .color-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+        
+        .color-btn i {
+            margin-right: 8px;
+        }
+        
+        .vermelho { background: linear-gradient(to right, #e74c3c, #c0392b); }
+        .azul { background: linear-gradient(to right, #3498db, #2980b9); }
+        .verde { background: linear-gradient(to right, #2ecc71, #27ae60); }
+        .roxo { background: linear-gradient(to right, #9b59b6, #8e44ad); }
+        .laranja { background: linear-gradient(to right, #f39c12, #e67e22); }
+        .reset { background: linear-gradient(to right, #7f8c8d, #95a5a6); }
+        
+        .custom-color {
+            margin: 20px 0;
+        }
+        
+        .custom-color input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-right: 10px;
+            width: 80px;
+            height: 40px;
+            vertical-align: middle;
+        }
+        
+        .custom-color button {
+            padding: 10px 20px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            vertical-align: middle;
+        }
+        
+        .info-panels {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .panel {
+            flex: 1;
+            min-width: 300px;
+            padding: 25px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        
+        .dark-mode .panel {
+            background: rgba(45, 45, 55, 0.9);
+        }
+        
+        .panel h2 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .dark-mode .panel h2 {
+            color: #f5f7fa;
+            border-color: #555;
+        }
+        
+        .panel h2 i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+        
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            line-height: 1.5;
+            margin: 15px 0;
+        }
+        
+        .color-info {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .color-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            margin-right: 15px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+        }
+        
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .dark-mode footer {
+            color: #bdc3c7;
+        }
+        
+        @media (max-width: 768px) {
+            .color-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .color-btn {
+                width: 80%;
+            }
+            
+            .info-panels {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <div class="container">
+        <header>
+            <h1>Explorador de Cores Web</h1>
+            <p class="subtitle">Aprenda sobre cores em CSS de forma interativa</p>
+        </header>
+        
+        <div class="color-picker">
+            <h2><i class="fas fa-palette"></i> Escolha uma cor de fundo</h2>
+            <p>Experimente diferentes cores e veja como o código CSS funciona</p>
+            
+            <div class="color-buttons">
+                <button class="color-btn vermelho" onclick="mudarCor('#e74c3c', 'Vermelho')">
+                    <i class="fas fa-fire"></i> Vermelho
+                </button>
+                <button class="color-btn azul" onclick="mudarCor('#3498db', 'Azul')">
+                    <i class="fas fa-tint"></i> Azul
+                </button>
+                <button class="color-btn verde" onclick="mudarCor('#2ecc71', 'Verde')">
+                    <i class="fas fa-leaf"></i> Verde
+                </button>
+                <button class="color-btn roxo" onclick="mudarCor('#9b59b6', 'Roxo')">
+                    <i class="fas fa-gem"></i> Roxo
+                </button>
+                <button class="color-btn laranja" onclick="mudarCor('#f39c12', 'Laranja')">
+                    <i class="fas fa-sun"></i> Laranja
+                </button>
+                <button class="color-btn reset" onclick="resetarCor()">
+                    <i class="fas fa-undo"></i> Resetar
+                </button>
+            </div>
+            
+            <div class="custom-color">
+                <h3><i class="fas fa-eyedropper"></i> Ou escolha uma cor personalizada:</h3>
+                <input type="color" id="customColor" value="#3498db">
+                <button onclick="aplicarCorPersonalizada()">Aplicar Cor</button>
+            </div>
+        </div>
+        
+        <div class="info-panels">
+            <div class="panel">
+                <h2><i class="fas fa-code"></i> Código CSS Utilizado</h2>
+                <pre id="mostraCodigo">// Selecione uma cor para ver o código</pre>
+            </div>
+            
+            <div class="panel">
+                <h2><i class="fas fa-lightbulb"></i> Explicação</h2>
+                <p id="mostraExplicacao">Selecione uma cor para ver uma explicação sobre como o CSS funciona.</p>
+                
+                <div id="colorDetails">
+                    <h3>Informações sobre a cor:</h3>
+                    <div class="color-info">
+                        <div class="color-box" id="currentColorBox"></div>
+                        <div>
+                            <p>Nome: <span id="colorName">-</span></p>
+                            <p>Valor HEX: <span id="colorHex">-</span></p>
+                            <p>Valor RGB: <span id="colorRgb">-</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 Explorador de Cores Web - Projeto Educacional</p>
+            <p>Desenvolvido para ajudar aprendizes de web design</p>
+        </footer>
+    </div>
+
+    <script>
+        function mudarCor(cor, nomeCor) {
+            // Muda a cor do fundo com transição suave
+            document.body.style.backgroundColor = cor;
+            
+            // Atualiza a cor do texto para melhor contraste
+            if (cor === '#f39c12' || cor === '#2ecc71') {
+                document.body.style.color = '#333';
+            } else {
+                document.body.style.color = '#f5f7fa';
+            }
+            
+            // Mostra o código que fez isso
+            let codigo = `// Alterar cor de fundo do body
+document.body.style.backgroundColor = "${cor}";
+
+// Alterar cor do texto para contraste
+document.body.style.color = "${document.body.style.color}";`;
+            
+            document.getElementById("mostraCodigo").textContent = codigo;
+            
+            // Mostra uma explicação detalhada
+            let explicacao = `O código acima altera a cor de fundo da página para ${nomeCor} (${cor}) usando JavaScript para modificar diretamente o estilo do elemento body. 
+            
+A segunda linha ajusta a cor do texto para garantir um contraste adequado e legibilidade, importante para acessibilidade.`;
+            
+            document.getElementById("mostraExplicacao").textContent = explicacao;
+            
+            // Atualiza informações detalhadas da cor
+            document.getElementById("colorName").textContent = nomeCor;
+            document.getElementById("colorHex").textContent = cor;
+            
+            // Converte HEX para RGB
+            const rgb = hexToRgb(cor);
+            if (rgb) {
+                document.getElementById("colorRgb").textContent = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+            }
+            
+            // Atualiza a caixa de cor
+            document.getElementById("currentColorBox").style.backgroundColor = cor;
+        }
+        
+        function resetarCor() {
+            document.body.style.backgroundColor = '';
+            document.body.style.color = '';
+            document.getElementById("mostraCodigo").textContent = '// Selecione uma cor para ver o código';
+            document.getElementById("mostraExplicacao").textContent = 'Selecione uma cor para ver uma explicação sobre como o CSS funciona.';
+            document.getElementById("colorName").textContent = '-';
+            document.getElementById("colorHex").textContent = '-';
+            document.getElementById("colorRgb").textContent = '-';
+            document.getElementById("currentColorBox").style.backgroundColor = '#ddd';
+        }
+        
+        function aplicarCorPersonalizada() {
+            const cor = document.getElementById("customColor").value;
+            mudarCor(cor, "Personalizada");
+        }
+        
+        function toggleTheme() {
+            document.body.classList.toggle("dark-mode");
+            const btn = document.querySelector(".theme-toggle");
+            const icon = btn.querySelector("i");
+            
+            if (document.body.classList.contains("dark-mode")) {
+                icon.classList.remove("fa-moon");
+                icon.classList.add("fa-sun");
+            } else {
+                icon.classList.remove("fa-sun");
+                icon.classList.add("fa-moon");
+            }
+        }
+        
+        function hexToRgb(hex) {
+            // Remove o # se presente
+            hex = hex.replace('#', '');
+            
+            // Converte 3-digit hex para 6-digits
+            if (hex.length === 3) {
+                hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+            }
+            
+            // Verifica se tem 6 dígitos
+            if (hex.length !== 6) {
+                return null;
+            }
+            
+            // Converte para RGB
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            
+            return { r, g, b };
+        }
+        
+        // Inicializa a página
+        document.getElementById("currentColorBox").style.backgroundColor = "#ddd";
+    </script>
+</body>
+</html>

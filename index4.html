@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalizador de Tabelas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        header {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .panel {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        
+        h2 {
+            color: #3498db;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        input[type="text"],
+        input[type="color"],
+        input[type="range"],
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        input[type="range"] {
+            padding: 0;
+        }
+        
+        .range-value {
+            display: inline-block;
+            width: 50px;
+            text-align: right;
+        }
+        
+        .preview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 300px;
+        }
+        
+        #tablePreview {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        #tablePreview th, #tablePreview td {
+            padding: 10px;
+            text-align: left;
+        }
+        
+        .code-container {
+            position: relative;
+            grid-column: 1 / -1;
+        }
+        
+        pre {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .copy-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        @media (max-width: 600px) {
+            .two-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .toggle-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #3498db;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Personalizador de Tabelas</h1>
+            <p>Personalize a tabela abaixo e veja o código gerado em tempo real</p>
+        </header>
+        
+        <div class="panel">
+            <h2>Personalização</h2>
+            
+            <div class="two-columns">
+                <div class="control-group">
+                    <label for="headerBgColor">Cor do Cabeçalho:</label>
+                    <input type="color" id="headerBgColor" value="#3498db">
+                </div>
+                
+                <div class="control-group">
+                    <label for="headerTextColor">Texto do Cabeçalho:</label>
+                    <input type="color" id="headerTextColor" value="#ffffff">
+                </div>
+            </div>
+            
+            <div class="two-columns">
+                <div class="control-group">
+                    <label for="cellBgColor">Cor das Células:</label>
+                    <input type="color" id="cellBgColor" value="#f9f9f9">
+                </div>
+                
+                <div class="control-group">
+                    <label for="cellTextColor">Texto das Células:</label>
+                    <input type="color" id="cellTextColor" value="#333333">
+                </div>
+            </div>
+            
+            <div class="two-columns">
+                <div class="control-group">
+                    <label for="borderColor">Cor da Borda:</label>
+                    <input type="color" id="borderColor" value="#dddddd">
+                </div>
+                
+                <div class="control-group">
+                    <label for="borderWidth">Espessura da Borda (px):</label>
+                    <input type="range" id="borderWidth" min="0" max="5" value="1">
+                    <span class="range-value" id="borderWidthValue">1px</span>
+                </div>
+            </div>
+            
+            <div class="two-columns">
+                <div class="control-group">
+                    <label for="fontSize">Tamanho da Fonte (px):</label>
+                    <input type="range" id="fontSize" min="12" max="24" value="16">
+                    <span class="range-value" id="fontSizeValue">16px</span>
+                </div>
+                
+                <div class="control-group">
+                    <label for="padding">Espaçamento interno (px):</label>
+                    <input type="range" id="padding" min="5" max="20" value="10">
+                    <span class="range-value" id="paddingValue">10px</span>
+                </div>
+            </div>
+            
+            <div class="two-columns">
+                <div class="control-group">
+                    <label for="fontFamily">Fonte:</label>
+                    <select id="fontFamily">
+                        <option value="Arial, sans-serif">Arial</option>
+                        <option value="Georgia, serif">Georgia</option>
+                        <option value="'Courier New', monospace">Courier New</option>
+                        <option value="Verdana, sans-serif">Verdana</option>
+                        <option value="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif" selected>Segoe UI</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label for="align">Alinhamento do Texto:</label>
+                    <select id="align">
+                        <option value="left">Esquerda</option>
+                        <option value="center">Centro</option>
+                        <option value="right">Direita</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="toggle-control">
+                <label for="zebraStripe">Listras zebradas:</label>
+                <label class="switch">
+                    <input type="checkbox" id="zebraStripe">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="toggle-control">
+                <label for="hoverEffect">Efeito ao passar o mouse:</label>
+                <label class="switch">
+                    <input type="checkbox" id="hoverEffect" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="panel preview">
+            <h2>Visualização</h2>
+            <div class="table-container">
+                <table id="tablePreview">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Idade</th>
+                            <th>Cidade</th>
+                            <th>Profissão</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>João Silva</td>
+                            <td>32</td>
+                            <td>São Paulo</td>
+                            <td>Desenvolvedor</td>
+                        </tr>
+                        <tr>
+                            <td>Maria Santos</td>
+                            <td>28</td>
+                            <td>Rio de Janeiro</td>
+                            <td>Designer</td>
+                        </tr>
+                        <tr>
+                            <td>Pedro Costa</td>
+                            <td>45</td>
+                            <td>Belo Horizonte</td>
+                            <td>Gerente</td>
+                        </tr>
+                        <tr>
+                            <td>Ana Oliveira</td>
+                            <td>29</td>
+                            <td>Porto Alegre</td>
+                            <td>Analista</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="panel code-container">
+            <h2>Código Gerado</h2>
+            <button class="copy-btn" id="copyButton">Copiar Código</button>
+            <pre id="generatedCode"></pre>
+        </div>
+    </div>
+
+    <script>
+        // Elementos DOM
+        const headerBgColor = document.getElementById('headerBgColor');
+        const headerTextColor = document.getElementById('headerTextColor');
+        const cellBgColor = document.getElementById('cellBgColor');
+        const cellTextColor = document.getElementById('cellTextColor');
+        const borderColor = document.getElementById('borderColor');
+        const borderWidth = document.getElementById('borderWidth');
+        const borderWidthValue = document.getElementById('borderWidthValue');
+        const fontSize = document.getElementById('fontSize');
+        const fontSizeValue = document.getElementById('fontSizeValue');
+        const padding = document.getElementById('padding');
+        const paddingValue = document.getElementById('paddingValue');
+        const fontFamily = document.getElementById('fontFamily');
+        const align = document.getElementById('align');
+        const zebraStripe = document.getElementById('zebraStripe');
+        const hoverEffect = document.getElementById('hoverEffect');
+        const tablePreview = document.getElementById('tablePreview');
+        const generatedCode = document.getElementById('generatedCode');
+        const copyButton = document.getElementById('copyButton');
+        
+        // Atualizar os valores exibidos dos ranges
+        borderWidthValue.textContent = `${borderWidth.value}px`;
+        fontSizeValue.textContent = `${fontSize.value}px`;
+        paddingValue.textContent = `${padding.value}px`;
+        
+        // Função para atualizar o preview e o código
+        function updatePreview() {
+            // Atualizar a tabela de preview
+            const thElements = tablePreview.querySelectorAll('th');
+            const tdElements = tablePreview.querySelectorAll('td');
+            const trElements = tablePreview.querySelectorAll('tbody tr');
+            
+            // Aplicar estilos ao cabeçalho
+            thElements.forEach(th => {
+                th.style.backgroundColor = headerBgColor.value;
+                th.style.color = headerTextColor.value;
+            });
+            
+            // Aplicar estilos às células
+            tdElements.forEach(td => {
+                td.style.backgroundColor = cellBgColor.value;
+                td.style.color = cellTextColor.value;
+            });
+            
+            // Aplicar estilos de borda
+            const borderStyle = `${borderWidth.value}px solid ${borderColor.value}`;
+            thElements.forEach(th => {
+                th.style.border = borderStyle;
+            });
+            tdElements.forEach(td => {
+                td.style.border = borderStyle;
+            });
+            
+            // Aplicar tamanho de fonte e espaçamento
+            tablePreview.style.fontSize = `${fontSize.value}px`;
+            thElements.forEach(th => {
+                th.style.padding = `${padding.value}px`;
+            });
+            tdElements.forEach(td => {
+                td.style.padding = `${padding.value}px`;
+            });
+            
+            // Aplicar fonte e alinhamento
+            tablePreview.style.fontFamily = fontFamily.value;
+            thElements.forEach(th => {
+                th.style.textAlign = align.value;
+            });
+            tdElements.forEach(td => {
+                td.style.textAlign = align.value;
+            });
+            
+            // Aplicar listras zebradas
+            trElements.forEach((tr, index) => {
+                if (zebraStripe.checked && index % 2 === 1) {
+                    tr.style.backgroundColor = '#f2f2f2';
+                } else {
+                    tr.style.backgroundColor = '';
+                }
+                
+                // Aplicar efeito hover
+                if (hoverEffect.checked) {
+                    tr.onmouseover = () => {
+                        tr.style.backgroundColor = '#e6f7ff';
+                    };
+                    tr.onmouseout = () => {
+                        if (zebraStripe.checked && index % 2 === 1) {
+                            tr.style.backgroundColor = '#f2f2f2';
+                        } else {
+                            tr.style.backgroundColor = '';
+                        }
+                    };
+                } else {
+                    tr.onmouseover = null;
+                    tr.onmouseout = null;
+                }
+            });
+            
+            // Gerar o código
+            generateCode();
+        }
+        
+        // Função para gerar o código HTML e CSS
+        function generateCode() {
+            const zebraCss = zebraStripe.checked ? `
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }` : '';
+
+            const hoverCss = hoverEffect.checked ? `
+  tr:hover {
+    background-color: #e6f7ff;
+  }` : '';
+
+            const code = `<!-- HTML -->
+<table class="tabela-personalizada">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Idade</th>
+      <th>Cidade</th>
+      <th>Profissão</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>João Silva</td>
+      <td>32</td>
+      <td>São Paulo</td>
+      <td>Desenvolvedor</td>
+    </tr>
+    <tr>
+      <td>Maria Santos</td>
+      <td>28</td>
+      <td>Rio de Janeiro</td>
+      <td>Designer</td>
+    </tr>
+    <tr>
+      <td>Pedro Costa</td>
+      <td>45</td>
+      <td>Belo Horizonte</td>
+      <td>Gerente</td>
+    </tr>
+    <tr>
+      <td>Ana Oliveira</td>
+      <td>29</td>
+      <td>Porto Alegre</td>
+      <td>Analista</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- CSS -->
+<style>
+.tabela-personalizada {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: ${fontFamily.value};
+  font-size: ${fontSize.value}px;
+}
+
+.tabela-personalizada th {
+  background-color: ${headerBgColor.value};
+  color: ${headerTextColor.value};
+  border: ${borderWidth.value}px solid ${borderColor.value};
+  padding: ${padding.value}px;
+  text-align: ${align.value};
+}
+
+.tabela-personalizada td {
+  background-color: ${cellBgColor.value};
+  color: ${cellTextColor.value};
+  border: ${borderWidth.value}px solid ${borderColor.value};
+  padding: ${padding.value}px;
+  text-align: ${align.value};
+}
+${zebraCss}
+${hoverCss}
+</style>`;
+            
+            generatedCode.textContent = code;
+        }
+        
+        // Event listeners para os controles
+        headerBgColor.addEventListener('input', updatePreview);
+        headerTextColor.addEventListener('input', updatePreview);
+        cellBgColor.addEventListener('input', updatePreview);
+        cellTextColor.addEventListener('input', updatePreview);
+        borderColor.addEventListener('input', updatePreview);
+        borderWidth.addEventListener('input', function() {
+            borderWidthValue.textContent = `${this.value}px`;
+            updatePreview();
+        });
+        fontSize.addEventListener('input', function() {
+            fontSizeValue.textContent = `${this.value}px`;
+            updatePreview();
+        });
+        padding.addEventListener('input', function() {
+            paddingValue.textContent = `${this.value}px`;
+            updatePreview();
+        });
+        fontFamily.addEventListener('change', updatePreview);
+        align.addEventListener('change', updatePreview);
+        zebraStripe.addEventListener('change', updatePreview);
+        hoverEffect.addEventListener('change', updatePreview);
+        
+        // Copiar código para a área de transferência
+        copyButton.addEventListener('click', function() {
+            const textArea = document.createElement('textarea');
+            textArea.value = generatedCode.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            // Feedback visual
+            const originalText = copyButton.textContent;
+            copyButton.textContent = 'Copiado!';
+            setTimeout(() => {
+                copyButton.textContent = originalText;
+            }, 2000);
+        });
+        
+        // Inicializar
+        updatePreview();
+    </script>
+</body>
+</html>
